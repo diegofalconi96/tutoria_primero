@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproducir Audio con Retraso</title>
+    <!-- Cargar Font Awesome para los iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 50px;
+            color: white;
+            animation: rotate 1s infinite linear;
+        }
+
+        .loading-text {
+            margin-top: 10px;
+            font-size: 20px;
+            color: white;
+        }
+
+        /* Estilo para la barra de progreso */
+        .progress-container {
+            width: 80%;
+            height: 5px;
+            background-color: #444;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #00ff00;
+            transition: width 0.1s;
+        }
+
+        /* Icono de bocina cuando se está reproduciendo */
+        .audio-playing {
+            display: none;
+        }
+
+        .audio-playing.active {
+            display: block;
+            font-size: 50px;
+            color: #00ff00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Icono de carga (giratorio) -->
+        <i class="fas fa-sync-alt icon"></i>
+        <div class="loading-text">Cargando audio...</div>
+
+        <!-- Barra de progreso -->
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <!-- Icono de bocina cuando esté reproduciendo -->
+        <i class="fas fa-volume-up audio-playing"></i>
+    </div>
+
+    <!-- Elemento de audio -->
+    <audio id="audio">
+        <source src="/1.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const audio = document.getElementById('audio');
+                const progressBar = document.querySelector('.progress-bar');
+                const playIcon = document.querySelector('.audio-playing');
+                const container = document.querySelector('.container');
+                const syncIcon = document.querySelector('.icon');
+
+                // Reproducir el audio
+                audio.play().catch(error => {
+                    console.error('Error al reproducir el audio:', error);
+                });
+
+                // Ocultar el icono de carga
+                syncIcon.style.display = 'none';
+
+                // Mostrar el icono de bocina
+                playIcon.classList.add('active');
+
+                // Actualizar la barra de progreso conforme avanza el audio
+                audio.addEventListener('timeupdate', () => {
+                    const progress = (audio.currentTime / audio.duration) * 100;
+                    progressBar.style.width = progress + '%';
+                });
+
+                // Ocultar la interfaz de carga después de la reproducción
+                audio.onended = () => {
+                    container.style.display = 'none';  // Ocultar todo al finalizar la reproducción
+                };
+            }, 1000); // 3 segundos de espera
+        });
+    </script>
+</body>
+
+</html>

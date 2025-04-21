@@ -1,5 +1,0 @@
-hola mundo
-holaaaa
-??????
-....
-Holaaaaa
